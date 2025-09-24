@@ -12,6 +12,12 @@ services:
       - OLLAMA_HOST=0.0.0.0
       - OLLAMA_ORIGINS=*
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: ${MEMORY_LIMIT:-16G}
+        reservations:
+          memory: ${MEMORY_RESERVE:-4G}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
       interval: 30s
