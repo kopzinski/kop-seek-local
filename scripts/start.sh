@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Script para gerenciar o DeepSeek Local
-# Comandos rápidos para uso diário
+# Script to manage DeepSeek Local
+# Quick commands for daily use
 
 set -e
 
-# Carregar configurações
+# Load configurations
 if [ -f .env ]; then
     source .env
 else
@@ -21,91 +21,91 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-# Função para mostrar ajuda
+# Function to show help
 show_help() {
     echo -e "${BLUE}🤖 DeepSeek Local Manager${NC}"
     echo ""
-    echo -e "${YELLOW}Uso: $0 [comando]${NC}"
+    echo -e "${YELLOW}Usage: $0 [command]${NC}"
     echo ""
-    echo -e "${GREEN}Comandos disponíveis:${NC}"
-    echo "  start       - Inicia os serviços"
-    echo "  stop        - Para os serviços"
-    echo "  restart     - Reinicia os serviços"
-    echo "  status      - Mostra status dos containers"
-    echo "  logs        - Mostra logs em tempo real"
-    echo "  models      - Lista modelos instalados"
-    echo "  install     - Instala novos modelos"
-    echo "  test        - Testa a API com exemplo"
-    echo "  urls        - Mostra URLs de acesso"
-    echo "  cleanup     - Remove containers e volumes"
+    echo -e "${GREEN}Available commands:${NC}"
+    echo "  start       - Start services"
+    echo "  stop        - Stop services"
+    echo "  restart     - Restart services"
+    echo "  status      - Show container status"
+    echo "  logs        - Show real-time logs"
+    echo "  models      - List installed models"
+    echo "  install     - Install new models"
+    echo "  test        - Test API with example"
+    echo "  urls        - Show access URLs"
+    echo "  cleanup     - Remove containers and volumes"
     echo ""
-    echo -e "${CYAN}Exemplos:${NC}"
-    echo "  $0 start                    # Iniciar tudo"
-    echo "  $0 install deepseek-v3      # Instalar modelo"
-    echo "  $0 test 'Hello in Python'   # Testar com prompt"
+    echo -e "${CYAN}Examples:${NC}"
+    echo "  $0 start                    # Start everything"
+    echo "  $0 install deepseek-v3      # Install model"
+    echo "  $0 test 'Hello in Python'   # Test with prompt"
     echo ""
 }
 
-# Função para verificar status
+# Function to check status
 check_status() {
-    echo -e "${BLUE}📊 Status dos serviços:${NC}"
+    echo -e "${BLUE}📊 Service status:${NC}"
     echo ""
-    
+
     if docker-compose ps | grep -q "deepseek-ollama.*Up"; then
-        echo -e "${GREEN}✅ Ollama: Rodando${NC}"
+        echo -e "${GREEN}✅ Ollama: Running${NC}"
         if curl -s http://localhost:${OLLAMA_PORT}/api/tags > /dev/null; then
-            echo -e "${GREEN}✅ API: Respondendo${NC}"
+            echo -e "${GREEN}✅ API: Responding${NC}"
         else
-            echo -e "${YELLOW}⚠️  API: Não responde${NC}"
+            echo -e "${YELLOW}⚠️  API: Not responding${NC}"
         fi
     else
-        echo -e "${RED}❌ Ollama: Parado${NC}"
+        echo -e "${RED}❌ Ollama: Stopped${NC}"
     fi
-    
+
     if docker-compose ps | grep -q "deepseek-webui.*Up"; then
-        echo -e "${GREEN}✅ Interface Web: Rodando${NC}"
+        echo -e "${GREEN}✅ Web Interface: Running${NC}"
     else
-        echo -e "${YELLOW}⚠️  Interface Web: Parado${NC}"
+        echo -e "${YELLOW}⚠️  Web Interface: Stopped${NC}"
     fi
-    
+
     echo ""
 }
 
-# Função para mostrar URLs
+# Function to show URLs
 show_urls() {
-    echo -e "${BLUE}🌐 URLs de Acesso:${NC}"
+    echo -e "${BLUE}🌐 Access URLs:${NC}"
     echo ""
-    echo -e "${GREEN}API Ollama:${NC}"
+    echo -e "${GREEN}Ollama API:${NC}"
     echo "  http://localhost:${OLLAMA_PORT}"
     echo "  http://$(hostname -I | awk '{print $1}'):${OLLAMA_PORT}"
     echo ""
-    echo -e "${GREEN}Interface Web:${NC}"
+    echo -e "${GREEN}Web Interface:${NC}"
     echo "  http://localhost:${WEBUI_PORT}"
     echo "  http://$(hostname -I | awk '{print $1}'):${WEBUI_PORT}"
     echo ""
 }
 
-# Função para testar API
+# Function to test API
 test_api() {
-    local prompt="${1:-Escreva um Hello World em Node.js}"
-    
-    echo -e "${BLUE}🧪 Testando API com prompt: ${YELLOW}\"$prompt\"${NC}"
+    local prompt="${1:-Write a Hello World in Node.js}"
+
+    echo -e "${BLUE}🧪 Testing API with prompt: ${YELLOW}\"$prompt\"${NC}"
     echo ""
-    
-    # Verificar se há modelos instalados
+
+    # Check if there are installed models
     local models=$(docker exec deepseek-ollama ollama list 2>/dev/null | tail -n +2)
     if [ -z "$models" ]; then
-        echo -e "${RED}❌ Nenhum modelo instalado. Execute: $0 install${NC}"
+        echo -e "${RED}❌ No models installed. Run: $0 install${NC}"
         return 1
     fi
-    
-    # Pegar primeiro modelo da lista
+
+    # Get first model from list
     local first_model=$(echo "$models" | head -n 1 | awk '{print $1}')
-    
-    echo -e "${YELLOW}📡 Usando modelo: $first_model${NC}"
-    echo -e "${YELLOW}⏳ Gerando resposta...${NC}"
+
+    echo -e "${YELLOW}📡 Using model: $first_model${NC}"
+    echo -e "${YELLOW}⏳ Generating response...${NC}"
     echo ""
-    
+
     curl -s -X POST http://localhost:${OLLAMA_PORT}/api/generate \
         -H "Content-Type: application/json" \
         -d "{
@@ -113,53 +113,53 @@ test_api() {
             \"prompt\": \"$prompt\",
             \"stream\": false
         }" | jq -r '.response' 2>/dev/null || {
-        echo -e "${RED}❌ Erro na API. Verifique os logs: $0 logs${NC}"
+        echo -e "${RED}❌ API error. Check logs: $0 logs${NC}"
         return 1
     }
-    
+
     echo ""
-    echo -e "${GREEN}✅ Teste concluído!${NC}"
+    echo -e "${GREEN}✅ Test completed!${NC}"
 }
 
-# Função principal
+# Main function
 main() {
     case "${1:-help}" in
         "start")
-            echo -e "${BLUE}🚀 Iniciando DeepSeek Local...${NC}"
+            echo -e "${BLUE}🚀 Starting DeepSeek Local...${NC}"
             docker-compose up -d
             sleep 3
             check_status
             show_urls
             ;;
-            
+
         "stop")
-            echo -e "${YELLOW}⏸️  Parando serviços...${NC}"
+            echo -e "${YELLOW}⏸️  Stopping services...${NC}"
             docker-compose stop
-            echo -e "${GREEN}✅ Serviços parados${NC}"
+            echo -e "${GREEN}✅ Services stopped${NC}"
             ;;
-            
+
         "restart")
-            echo -e "${YELLOW}🔄 Reiniciando serviços...${NC}"
+            echo -e "${YELLOW}🔄 Restarting services...${NC}"
             docker-compose restart
             sleep 3
             check_status
             ;;
-            
+
         "status")
             check_status
             ;;
-            
+
         "logs")
-            echo -e "${BLUE}📋 Logs em tempo real (Ctrl+C para sair):${NC}"
+            echo -e "${BLUE}📋 Real-time logs (Ctrl+C to exit):${NC}"
             docker-compose logs -f
             ;;
-            
+
         "models")
-            echo -e "${BLUE}📦 Modelos instalados:${NC}"
+            echo -e "${BLUE}📦 Installed models:${NC}"
             echo ""
             docker exec deepseek-ollama ollama list
             ;;
-            
+
         "install")
             shift
             if [ $# -eq 0 ]; then
@@ -168,34 +168,34 @@ main() {
                 ./scripts/install-models.sh "$@"
             fi
             ;;
-            
+
         "test")
             shift
             test_api "$*"
             ;;
-            
+
         "urls")
             show_urls
             ;;
-            
+
         "cleanup")
-            echo -e "${RED}🗑️  ATENÇÃO: Isso vai remover TODOS os dados!${NC}"
-            read -p "Tem certeza? (s/N): " -n 1 -r
+            echo -e "${RED}🗑️  WARNING: This will remove ALL data!${NC}"
+            read -p "Are you sure? (y/N): " -n 1 -r
             echo
-            if [[ $REPLY =~ ^[Ss]$ ]]; then
+            if [[ $REPLY =~ ^[Yy]$ ]]; then
                 docker-compose down -v
                 docker volume prune -f
-                echo -e "${GREEN}✅ Limpeza concluída${NC}"
+                echo -e "${GREEN}✅ Cleanup completed${NC}"
             else
-                echo -e "${YELLOW}Operação cancelada${NC}"
+                echo -e "${YELLOW}Operation cancelled${NC}"
             fi
             ;;
-            
+
         "help"|*)
             show_help
             ;;
     esac
 }
 
-# Executar função principal
+# Execute main function
 main "$@"

@@ -1,83 +1,83 @@
 # DeepSeek Local 🤖
 
-Execute modelos de IA localmente para desenvolvimento sem limitações de tokens ou conexão com internet.
+Run AI models locally for development without token limitations or internet connection.
 
-## O que é?
+## What is it?
 
-Um setup Docker completo para rodar **DeepSeek V3** e outros modelos de IA localmente no seu servidor. Ideal para:
+A complete Docker setup to run **DeepSeek V3** and other AI models locally on your server. Ideal for:
 
-- ✅ **Desenvolvimento sem limites** - Sem tokens ou rate limits
-- ✅ **Privacidade total** - Tudo roda na sua rede
-- ✅ **Sempre disponível** - Funciona offline
-- ✅ **Múltiplos modelos** - DeepSeek, Qwen, Code Llama, etc.
+- ✅ **Unlimited development** - No tokens or rate limits
+- ✅ **Total privacy** - Everything runs on your network
+- ✅ **Always available** - Works offline
+- ✅ **Multiple models** - DeepSeek, Qwen, Code Llama, etc.
 
-## Requisitos Mínimos
+## Minimum Requirements
 
-- **32GB RAM** (recomendado para DeepSeek V3)
-- **20GB espaço livre** em disco
-- **Docker** e **Docker Compose** instalados
-- **Ubuntu Server/Desktop** ou similar
+- **32GB RAM** (recommended for DeepSeek V3)
+- **20GB free space** on disk
+- **Docker** and **Docker Compose** installed
+- **Ubuntu Server/Desktop** or similar
 
-## Instalação Rápida
+## Quick Installation
 
-### 1. Baixar o projeto
+### 1. Download the project
 
 ```bash
-git clone https://github.com/seuusuario/deepseek-local.git
+git clone https://github.com/yourusername/deepseek-local.git
 cd deepseek-local
 ```
 
-### 2. Dar permissões aos scripts
+### 2. Give permissions to scripts
 
 ```bash
 chmod +x scripts/*.sh
 ```
 
-### 3. Configurar e instalar
+### 3. Configure and install
 
 ```bash
-# Instala tudo automaticamente
+# Installs everything automatically
 ./scripts/setup.sh
 ```
 
-**Pronto!** Em alguns minutos você terá:
-- 🌐 **API local**: `http://localhost:11434`
-- 🖥️ **Interface web**: `http://localhost:3000`
+**Done!** In a few minutes you'll have:
+- 🌐 **Local API**: `http://localhost:11434`
+- 🖥️ **Web interface**: `http://localhost:3000`
 
-### 4. Testar se funcionou
+### 4. Test if it worked
 
 ```bash
-# Testa a API
+# Test the API
 ./scripts/start.sh test
 
-# Ou acesse a interface web no navegador
+# Or access the web interface in browser
 # http://localhost:3000
 ```
 
-## Comandos Essenciais
+## Essential Commands
 
 ```bash
-# ⚡ Comandos rápidos do dia a dia
-./scripts/start.sh start     # Iniciar tudo
-./scripts/start.sh stop      # Parar tudo
-./scripts/start.sh status    # Ver se está rodando
-./scripts/start.sh test      # Testar com exemplo
+# ⚡ Quick daily commands
+./scripts/start.sh start     # Start everything
+./scripts/start.sh stop      # Stop everything
+./scripts/start.sh status    # Check if running
+./scripts/start.sh test      # Test with example
 
-# 📦 Gerenciar modelos
-./scripts/start.sh models                    # Listar instalados
-./scripts/start.sh install deepseek-v3       # Instalar modelo
-./scripts/start.sh install qwen2.5-coder:7b  # Modelo menor
+# 📦 Manage models
+./scripts/start.sh models                    # List installed
+./scripts/start.sh install deepseek-v3       # Install model
+./scripts/start.sh install qwen2.5-coder:7b  # Smaller model
 ```
 
-## Modelos Recomendados
+## Recommended Models
 
-| Modelo | Tamanho | Melhor para | RAM necessária |
-|--------|---------|-------------|----------------|
-| `qwen2.5-coder:7b` | ~5GB | Código rápido | 16GB |
-| `deepseek-v3` | ~14GB | Melhor qualidade | 32GB |
-| `deepseek-coder:6.7b` | ~4GB | Só programação | 16GB |
+| Model | Size | Best for | Required RAM |
+|-------|------|----------|--------------|
+| `qwen2.5-coder:7b` | ~5GB | Fast code | 16GB |
+| `deepseek-v3` | ~14GB | Best quality | 32GB |
+| `deepseek-coder:6.7b` | ~4GB | Programming only | 16GB |
 
-## Usar via API
+## Use via API
 
 ### cURL
 ```bash
@@ -85,7 +85,7 @@ curl -X POST http://localhost:11434/api/generate \
   -H "Content-Type: application/json" \
   -d '{
     "model": "deepseek-v3",
-    "prompt": "Crie uma função Node.js para ler CSV",
+    "prompt": "Create a Node.js function to read CSV",
     "stream": false
   }'
 ```
@@ -97,7 +97,7 @@ const response = await fetch('http://localhost:11434/api/generate', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     model: 'deepseek-v3',
-    prompt: 'Explique async/await em JavaScript',
+    prompt: 'Explain async/await in JavaScript',
     stream: false
   })
 });
@@ -115,7 +115,7 @@ request = Net::HTTP::Post.new(uri)
 request['Content-Type'] = 'application/json'
 request.body = {
   model: 'deepseek-v3',
-  prompt: 'Como usar gems no Ruby?',
+  prompt: 'How to use gems in Ruby?',
   stream: false
 }.to_json
 
@@ -126,81 +126,81 @@ end
 puts JSON.parse(response.body)['response']
 ```
 
-## Acesso Remoto
+## Remote Access
 
-Para usar de outros computadores na rede:
+To use from other computers on the network:
 
-1. **Descobrir IP do servidor:**
+1. **Find server IP:**
 ```bash
 ./scripts/start.sh urls
 ```
 
-2. **Acessar de outros dispositivos:**
-- API: `http://IP-DO-SERVIDOR:11434`  
-- Interface: `http://IP-DO-SERVIDOR:3000`
+2. **Access from other devices:**
+- API: `http://SERVER-IP:11434`
+- Interface: `http://SERVER-IP:3000`
 
-## Personalização
+## Customization
 
-### Trocar portas
-Edite o arquivo `.env`:
+### Change ports
+Edit the `.env` file:
 ```bash
 OLLAMA_PORT=11434
 WEBUI_PORT=3000
 ```
 
-### Modelos padrão
-Modifique no `.env` quais modelos instalar automaticamente:
+### Default models
+Modify in `.env` which models to install automatically:
 ```bash
 DEFAULT_MODELS=deepseek-v3,qwen2.5-coder:7b,codellama:7b
 ```
 
 ## Troubleshooting
 
-### Container não inicia
+### Container won't start
 ```bash
-# Ver logs
+# View logs
 ./scripts/start.sh logs
 
-# Verificar recursos
+# Check resources
 docker system df
 free -h
 ```
 
-### Modelo não responde
+### Model not responding
 ```bash
-# Verificar se está instalado
+# Check if installed
 ./scripts/start.sh models
 
-# Reinstalar modelo
+# Reinstall model
 ./scripts/start.sh install deepseek-v3
 ```
 
-### Limpar tudo e recomeçar
+### Clean everything and restart
 ```bash
-# ⚠️ Remove todos os modelos baixados
+# ⚠️ Removes all downloaded models
 ./scripts/start.sh cleanup
 ./scripts/setup.sh
 ```
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 deepseek-local/
-├── docker-compose.yml    # Configuração Docker
-├── .env                 # Variáveis de ambiente
+├── docker-compose.yml    # Docker configuration
+├── .env                 # Environment variables
 ├── scripts/
-│   ├── setup.sh        # Instalação inicial
-│   ├── start.sh        # Comandos diários
-│   └── install-models.sh # Gerenciar modelos
-└── README.md           # Esta documentação
+│   ├── setup.sh        # Initial installation
+│   ├── start.sh        # Daily commands
+│   └── install-models.sh # Manage models
+└── README.md           # This documentation
 ```
 
-## Suporte
+## Support
 
-- **Logs detalhados**: `./scripts/start.sh logs`
-- **Status completo**: `./scripts/start.sh status`  
-- **Teste da API**: `./scripts/start.sh test "seu prompt aqui"`
+- **Detailed logs**: `./scripts/start.sh logs`
+- **Complete status**: `./scripts/start.sh status`
+- **API test**: `./scripts/start.sh test "your prompt here"`
 
 ---
 
-**🎉 Agora você tem IA local ilimitada para desenvolvimento!**
+**🎉 Now you have unlimited local AI for development!**

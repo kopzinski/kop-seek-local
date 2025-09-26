@@ -1,92 +1,92 @@
-# DeepSeek Local - Contexto para Claude Code
+# DeepSeek Local - Context for Claude Code
 
-## Sobre o Projeto
+## About the Project
 
-Este projeto configura um ambiente Docker para executar modelos de IA (DeepSeek V3, Qwen, Code Llama) localmente, eliminando dependência de APIs externas e limitações de tokens.
+This project sets up a Docker environment to run AI models (DeepSeek V3, Qwen, Code Llama) locally, eliminating dependency on external APIs and token limitations.
 
-## Arquitetura
+## Architecture
 
-- **Docker Compose**: Orquestra containers Ollama + Interface Web
-- **Ollama**: Runtime para modelos LLM locais
-- **Open WebUI**: Interface web para interação
-- **Scripts bash**: Automação de setup e gerenciamento
+- **Docker Compose**: Orchestrates Ollama containers + Web Interface
+- **Ollama**: Runtime for local LLM models
+- **Open WebUI**: Web interface for interaction
+- **Bash scripts**: Setup and management automation
 
-## Estrutura de Arquivos
+## File Structure
 
 ```
 deepseek-local/
-├── docker-compose.yml     # Configuração dos containers
-├── .env                  # Variáveis de ambiente e configurações
+├── docker-compose.yml     # Container configuration
+├── .env                  # Environment variables and settings
 ├── scripts/
-│   ├── setup.sh         # Script de instalação inicial
-│   ├── start.sh         # Comandos para uso diário
-│   └── install-models.sh # Gerenciamento de modelos
-├── README.md            # Documentação para usuários
-└── CLAUDE.md           # Este arquivo (contexto para Claude Code)
+│   ├── setup.sh         # Initial installation script
+│   ├── start.sh         # Daily usage commands
+│   └── install-models.sh # Model management
+├── README.md            # User documentation
+└── CLAUDE.md           # This file (context for Claude Code)
 ```
 
-## Configurações Principais
+## Main Configurations
 
 ### Docker Compose (`docker-compose.yml`)
-- **ollama**: Container principal rodando na porta 11434
-- **open-webui**: Interface web na porta 3000
-- **Volumes persistentes**: Para armazenar modelos baixados
-- **Limitação de recursos**: Configurável via .env
-- **Health checks**: Para garantir funcionamento
+- **ollama**: Main container running on port 11434
+- **open-webui**: Web interface on port 3000
+- **Persistent volumes**: To store downloaded models
+- **Resource limitation**: Configurable via .env
+- **Health checks**: To ensure functionality
 
-### Variáveis de Ambiente (`.env`)
-- `OLLAMA_PORT`: Porta da API (padrão: 11434)
-- `WEBUI_PORT`: Porta da interface web (padrão: 3000)
-- `MEMORY_LIMIT`: Limite de RAM para o container
-- `DEFAULT_MODELS`: Modelos instalados automaticamente
+### Environment Variables (`.env`)
+- `OLLAMA_PORT`: API port (default: 11434)
+- `WEBUI_PORT`: Web interface port (default: 3000)
+- `MEMORY_LIMIT`: RAM limit for container
+- `DEFAULT_MODELS`: Automatically installed models
 
-## Scripts de Automação
+## Automation Scripts
 
 ### `setup.sh`
-- Verifica dependências (Docker, Docker Compose)
-- Sobe containers
-- Instala modelos padrão
-- Mostra URLs de acesso
+- Checks dependencies (Docker, Docker Compose)
+- Starts containers
+- Installs default models
+- Shows access URLs
 
 ### `start.sh`
-Gerenciador principal com comandos:
-- `start/stop/restart`: Controle dos serviços
-- `status`: Verifica saúde dos containers
-- `models`: Lista modelos instalados
-- `install`: Instala novos modelos
-- `test`: Testa API com prompt
-- `logs`: Visualiza logs em tempo real
+Main manager with commands:
+- `start/stop/restart`: Service control
+- `status`: Checks container health
+- `models`: Lists installed models
+- `install`: Installs new models
+- `test`: Tests API with prompt
+- `logs`: Views real-time logs
 
 ### `install-models.sh`
-- Download com progresso visual
-- Verifica se modelo já existe
-- Suporte a múltiplos modelos
-- Lista modelos recomendados por tamanho
+- Download with visual progress
+- Checks if model already exists
+- Support for multiple models
+- Lists recommended models by size
 
-## Modelos Suportados
+## Supported Models
 
-### Pequenos (4-8GB RAM)
-- `qwen2.5-coder:7b`: Otimizado para código
-- `deepseek-coder:6.7b`: Especialista em programação
+### Small (4-8GB RAM)
+- `qwen2.5-coder:7b`: Optimized for code
+- `deepseek-coder:6.7b`: Programming specialist
 - `codellama:7b`: Meta Code Llama
 
-### Médios (15-25GB RAM)
-- `deepseek-v3`: Melhor qualidade geral (~14B parâmetros)
-- `qwen2.5-coder:32b`: Especialista avançado
+### Medium (15-25GB RAM)
+- `deepseek-v3`: Best overall quality (~14B parameters)
+- `qwen2.5-coder:32b`: Advanced specialist
 
-### Grandes (30GB+ RAM)
-- `llama3.3:70b`: Máxima qualidade (quantizado)
+### Large (30GB+ RAM)
+- `llama3.3:70b`: Maximum quality (quantized)
 
 ## API Usage
 
-### Endpoint Principal
+### Main Endpoint
 `POST http://localhost:11434/api/generate`
 
-### Payload Exemplo
+### Example Payload
 ```json
 {
   "model": "deepseek-v3",
-  "prompt": "Crie uma função Node.js para ler CSV",
+  "prompt": "Create a Node.js function to read CSV",
   "stream": false
 }
 ```
@@ -94,78 +94,78 @@ Gerenciador principal com comandos:
 ### Response Format
 ```json
 {
-  "response": "conteúdo gerado pelo modelo",
+  "response": "content generated by the model",
   "done": true
 }
 ```
 
-## Casos de Uso Comuns
+## Common Use Cases
 
-1. **Desenvolvimento sem limites**: Code completion, refactoring, debugging
-2. **Prototipagem rápida**: Geração de código inicial
-3. **Code review**: Análise e sugestões de melhorias
-4. **Documentação**: Geração automática de docs
-5. **Tradução de código**: Entre linguagens (Node.js ↔ Ruby)
+1. **Unlimited development**: Code completion, refactoring, debugging
+2. **Rapid prototyping**: Initial code generation
+3. **Code review**: Analysis and improvement suggestions
+4. **Documentation**: Automatic docs generation
+5. **Code translation**: Between languages (Node.js ↔ Ruby)
 
-## Requisitos de Hardware
+## Hardware Requirements
 
-### Mínimo
-- 16GB RAM (para modelos 7B)
-- 10GB espaço disco
-- CPU multi-core
+### Minimum
+- 16GB RAM (for 7B models)
+- 10GB disk space
+- Multi-core CPU
 
-### Recomendado  
-- 32GB RAM (para DeepSeek V3)
-- 50GB espaço disco
-- Apple M-series ou CPU x86 moderna
+### Recommended
+- 32GB RAM (for DeepSeek V3)
+- 50GB disk space
+- Apple M-series or modern x86 CPU
 
 ### Ideal
-- 64GB+ RAM (múltiplos modelos grandes)
-- SSD rápido
-- GPU dedicada (futuro suporte)
+- 64GB+ RAM (multiple large models)
+- Fast SSD
+- Dedicated GPU (future support)
 
-## Troubleshooting Comum
+## Common Troubleshooting
 
-### Container não inicia
-- Verificar RAM disponível
-- Checar portas em uso
-- Validar permissões Docker
+### Container won't start
+- Check available RAM
+- Check ports in use
+- Validate Docker permissions
 
-### Modelo não responde
-- Confirmar instalação: `./scripts/start.sh models`
-- Verificar logs: `./scripts/start.sh logs`
-- Testar API: `./scripts/start.sh test`
+### Model not responding
+- Confirm installation: `./scripts/start.sh models`
+- Check logs: `./scripts/start.sh logs`
+- Test API: `./scripts/start.sh test`
 
-### Performance lenta
-- Aumentar `MEMORY_LIMIT` no .env
-- Usar modelos menores (7B vs 70B)
-- Fechar aplicações desnecessárias
+### Slow performance
+- Increase `MEMORY_LIMIT` in .env
+- Use smaller models (7B vs 70B)
+- Close unnecessary applications
 
-## Desenvolvimento e Contribuição
+## Development and Contribution
 
-### Padrões do Código
-- Scripts bash com verificação de erros (`set -e`)
-- Códigos coloridos para melhor UX
-- Funções modulares e reutilizáveis
-- Documentação inline nos scripts
+### Code Standards
+- Bash scripts with error checking (`set -e`)
+- Colored codes for better UX
+- Modular and reusable functions
+- Inline documentation in scripts
 
-### Extensões Possíveis
-- Suporte GPU (NVIDIA/AMD)
-- Múltiplos modelos simultâneos
-- Interface CLI personalizada
-- Integração com VSCode/IDEs
-- API proxy com load balancing
+### Possible Extensions
+- GPU support (NVIDIA/AMD)
+- Multiple simultaneous models
+- Custom CLI interface
+- VSCode/IDE integration
+- API proxy with load balancing
 
-## Considerações de Segurança
+## Security Considerations
 
-- **Rede local apenas**: Não expor publicamente sem autenticação
-- **Firewall**: Configurar regras apropriadas
-- **Updates**: Manter Docker e imagens atualizados
-- **Backup**: Volumes contêm modelos valiosos (GBs)
+- **Local network only**: Don't expose publicly without authentication
+- **Firewall**: Configure appropriate rules
+- **Updates**: Keep Docker and images updated
+- **Backup**: Volumes contain valuable models (GBs)
 
 ## Performance Tips
 
-1. **SSD**: Modelos carregam mais rápido
-2. **RAM**: Mais RAM = modelos maiores + melhor cache
-3. **CPU**: Mais cores = inferência mais rápida
-4. **Swap**: Desabilitar ou configurar adequadamente para evitar slowdowns
+1. **SSD**: Models load faster
+2. **RAM**: More RAM = larger models + better cache
+3. **CPU**: More cores = faster inference
+4. **Swap**: Disable or configure appropriately to avoid slowdowns

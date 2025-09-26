@@ -19,7 +19,7 @@ services:
     networks:
       - deepseek-network
 
-  # Opcional: Interface web para usar os modelos
+  # Optional: Web interface to use the models
   open-webui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: deepseek-webui
