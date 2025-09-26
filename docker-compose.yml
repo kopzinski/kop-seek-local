@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ollama:
     image: ollama/ollama:latest
@@ -15,15 +13,9 @@ services:
     deploy:
       resources:
         limits:
-          memory: ${MEMORY_LIMIT:-16G}
+          memory: ${MEMORY_LIMIT:-20G}
         reservations:
           memory: ${MEMORY_RESERVE:-4G}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
     networks:
       - deepseek-network
 
@@ -38,8 +30,7 @@ services:
     volumes:
       - open-webui-data:/app/backend/data
     depends_on:
-      ollama:
-        condition: service_healthy
+      - ollama
     restart: unless-stopped
     networks:
       - deepseek-network
