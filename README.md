@@ -50,6 +50,9 @@ chmod +x scripts/*.sh
 # Test the API
 ./scripts/start.sh test
 
+# Or use the standalone client
+./deepseek-client.sh "Hello, write a Python function"
+
 # Or access the web interface in browser
 # http://localhost:3000
 ```
@@ -76,6 +79,31 @@ chmod +x scripts/*.sh
 | `qwen2.5-coder:7b` | ~5GB | Fast code | 16GB |
 | `deepseek-v3` | ~14GB | Best quality | 32GB |
 | `deepseek-coder:6.7b` | ~4GB | Programming only | 16GB |
+
+## Quick Client (Standalone)
+
+For immediate testing without coding, use the included standalone client:
+
+```bash
+# Interactive chat mode
+./deepseek-client.sh
+
+# Single prompt
+./deepseek-client.sh "Write a Python function to sort a list"
+
+# List available models
+./deepseek-client.sh --models
+
+# Help and examples
+./deepseek-client.sh --help
+```
+
+**Features:**
+- ✅ **Interactive mode** - Chat with the AI
+- ✅ **Single prompt mode** - Quick questions
+- ✅ **Streaming responses** - See answers as they generate
+- ✅ **Auto-detects models** - No configuration needed
+- ✅ **Colored output** - Easy to read
 
 ## Use via API
 
@@ -188,6 +216,7 @@ free -h
 deepseek-local/
 ├── docker-compose.yml    # Docker configuration
 ├── .env                 # Environment variables
+├── deepseek-client.sh   # Standalone client for quick testing
 ├── scripts/
 │   ├── setup.sh        # Initial installation
 │   ├── start.sh        # Daily commands
